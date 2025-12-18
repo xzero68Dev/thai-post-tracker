@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <title>Thai Post Tracker</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <h1>📦 Thai Post Tracker</h1>
+
+  <form method="POST" action="/add">
+    <input
+      type="text"
+      name="track_code"
+      placeholder="กรอกเลขพัสดุ"
+      required
+    />
+    <button type="submit">เพิ่ม</button>
+  </form>
+
+  <form method="POST" action="/check-now" style="margin-bottom:20px;">
+    <button type="submit">🔄 เช็คทันที</button>
+  </form>
+
+  <% let currentDate = null; %>
+  <% parcels.forEach(p => { %>
+    <% if (currentDate !== p.group_date) { currentDate = p.group_date; %>
+      <h3>📅 วันที่เพิ่ม: <%= currentDate %></h3>
+    <% } %>
+
+    <table>
+      <tr>
+        <th>Tracking</th>
+        <th>สถานะล่าสุด</th>
+        <th>อัปเดตล่าสุด</th>
+        <th>สถานะ</th>
+        <th></th>
+      </tr>
+      <tr>
+        <td><%= p.track_code %></td>
+        <td><%= p.last_status || '-' %></td>
+        <td><%= p.last_update || '-' %></td>
+        <td><%= p.delivered ? '✅' : '🚚' %></td>
+        <td>
+          <form
+            method="POST"
+            action="/delete/<%= p.id %>"
+            onsubmit="return confirm('ลบเลขนี้?')"
+          >
+            <button type="submit">🗑️</button>
+          </form>
+        </td>
+      </tr>
+    </table>
+  <% }) %>
+</body>
+</html>
